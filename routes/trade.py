@@ -1,5 +1,5 @@
 from fastapi import APIRouter,HTTPException
-
+from datetime import datetime
 from models.trade import Trade
 from config.db import client
 from schemas.trade import tradeEntity, tradesEntity
@@ -11,14 +11,14 @@ con=client.TradingCompany.trades
 
 
 
-# Endpoint to fetch a list of trades
 @trade.get("/trades")
 async def get_trades():
     print("all")
     return tradesEntity(con.find())
 
+
 @trade.get('/trades/search={query}')
-async def search(query:str):
+async def search_trades(query:str):
     query = {
         "$or": [
             {"counterparty": {"$regex": f".*{query}.*", "$options": "i"}},
@@ -29,7 +29,8 @@ async def search(query:str):
     }
     print("search by quary")
     return tradesEntity(client.TradingCompany.trades.find(query))
-# Endpoint to fetch a single trade by id
+
+
 @trade.get("/trades/{id}")
 async def get_trade_by_id(id: str):
     print("find by ID")
@@ -38,7 +39,33 @@ async def get_trade_by_id(id: str):
     #     raise HTTPException(status_code=404, detail="Trade not found")
     # return restrade
 
-# Endpoint to search across trades
+
+@trade.get("/tradesfiltered")
+async def get_filtered_trades(assetClass: str = None, start: datetime = None, end: datetime = None,
+                      minPrice: float = None, maxPrice: float = None, tradeType: str = None):
+    filters = {}
+    if assetClass:
+        filters["asset_class"] = assetClass
+    if start:
+        filters["trade_date_time"] = {"$gte": start}
+    if end:
+        if "trade_date_time" in filters:
+            filters["trade_date_time"]["$lte"] = end
+        else:
+            filters["trade_date_time"] = {"$lte": end}
+    if minPrice:
+        filters["trade_details.price"] = {"$gte": minPrice}
+    if maxPrice:
+        if "trade_details.price" in filters:
+            filters["trade_details.price"]["$lte"] = maxPrice
+        else:
+            filters["trade_details.price"] = {"$lte": maxPrice}
+    if tradeType:
+        filters["trade_details.buySellIndicator"] = tradeType
+    print(filters)
+    print("filtered data ")
+    return tradesEntity(con.find(filters))
+
 # @trade.get("/trades/search")
 # async def search_trades(query: str):
 #     query={
