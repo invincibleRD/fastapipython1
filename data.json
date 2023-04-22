@@ -1,0 +1,71 @@
+[
+    { v: 2, 
+        key: { _fts: "text", _ftsx: 1
+        }, 
+        name: "name_text_email_text", 
+        weights: { email: 1, name: 1
+        }, 
+        default_language: "english", 
+        language_override: "language",
+        textIndexVersion: 3
+    }, 
+    existing index: { 
+        v: 2, 
+        key: { _fts: "text", _ftsx: 1
+        }, 
+        name: "name_text", 
+        weights: { name: 1
+        }, 
+        default_language: "english", 
+        language_override: "language", 
+        textIndexVersion: 3
+    }, full error: {'ok': 0.0, 'errmsg': 'An equivalent index already exists with a different name and options. Requested index: { v: 2, key: { _fts: "text", _ftsx: 1
+            }, name: "name_text_email_text", weights: { email: 1, name: 1
+            }, default_language: "english", language_override: "language", textIndexVersion: 3
+        }, existing index: { v: 2, key: { _fts: "text", _ftsx: 1
+            }, name: "name_text", weights: { name: 1
+            }, default_language: "english", language_override: "language", textIndexVersion: 3
+        }', 'code': 85, 'codeName': 'IndexOptionsConflict', '$clusterTime': {'clusterTime': Timestamp(1682141463,
+            1), 'signature': {'hash': b'\xf0\xa1\xd2\xae\xc2\xe1\xf8\xaa\xfd[\xc0k2\x12\xec\x0e\xd8Z~\xfa', 'keyId': 7183747752235368449
+                }
+            }, 'operationTime': Timestamp(1682141463,
+            1)
+        }
+    ]
+
+    {'_id_': {'v': 2, 'key': [('_id',
+                1)
+            ]
+        }, 'name_text_email_text': {'v': 2, 'key': [('_fts', 'text'), ('_ftsx',
+                1)
+            ], 'weights': SON([('email',
+                1), ('name',
+                1)
+            ]), 'default_language': 'english', 'language_override': 'language', 'textIndexVersion': 3
+        }
+    }
+
+
+
+    from fastapi import FastAPI
+from pymongo import MongoClient
+from schemas.user import usersEntity
+
+app = FastAPI()
+client = MongoClient("mongodb+srv://admin:Dikush@cluster0.nnh08zd.mongodb.net/?retryWrites=true&w=majority")
+db = client[
+        "test"
+    ]
+collection = db[
+        "user"
+    ]
+
+
+@app.get("/documents")
+async def get_documents():
+
+    return usersEntity(collection.find({
+        "name": {
+            "$regex": ".*Shubh.*"
+        }
+    }))
