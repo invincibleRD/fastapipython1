@@ -3,7 +3,6 @@ from fastapi import APIRouter,HTTPException
 from models.trade import Trade
 from config.db import client
 from schemas.trade import tradeEntity, tradesEntity
-from mongopush import putdata
 from typing import List
 
 trade = APIRouter()
