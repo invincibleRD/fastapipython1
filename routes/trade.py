@@ -11,7 +11,7 @@ con = client.TradingCompany.trades2
 
 
 @trade.get("/trades",)
-async def get_trades() :
+async def get_trades():
     print("all")
     trades = con.find()
     return [Trade(**trade) for trade in trades]
@@ -72,14 +72,14 @@ async def get_filtered_trades(assetClass: str = None, start: datetime = None, en
 
 
 @trade.get("/paginatedtrades")
-async def get_paginated_trades(page: int = 1, page_size: int = 5):
+async def get_paginated_trades(page: int = 1, perPage: int = 5):
     res = {}
     all_trades = con.find()
     trades = [Trade(**trade) for trade in all_trades]
     res["pageNumber"] = page
-    res["totalPages"] = math.ceil(trades.__len__()/page_size)
+    res["totalPages"] = math.ceil(trades.__len__()/perPage)
     res["totalTrades"] = trades.__len__()
-    data = con.find().skip((page-1)*page_size).limit(page_size)
+    data = con.find().skip((page-1)*page_size).limit(perPage)
     trades = [Trade(**trade) for trade in data]
     if (trades == {} or page > res["totalPages"]):
         res["trades"] = "Please provide correct page number"

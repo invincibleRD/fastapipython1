@@ -1,0 +1,34 @@
+solution
+
+    The solution is a set of endpoints built using FastAPI, a modern, fast (high-performance), 
+    web framework for building APIs. The API provides functionality to get and filter trades, 
+    as well as pagination for the trades.
+
+    The solution includes the following endpoints:
+
+    -->  /trades: An endpoint that returns all the trades from the database.
+    -->  /trades/{id}: An endpoint that returns a trade by its ID.
+    -->  /trades/search={query}: An endpoint that returns trades matching the search query, 
+            which can be a substring of the trade's counterparty, instrumentId, instrumentName, or trader.
+    -->  /tradesfiltered: An endpoint that returns trades filtered based on their asset class, 
+            trade date time range, trade price range, and trade type (buy or sell).
+    -->  /paginatedtrades: An endpoint that returns trades in a paginated manner, where the page number and 
+            the number of trades per page can be specified.
+
+Reasoning behind the approach
+
+    The approach is to build an API that is easy to use, efficient, and scalable. FastAPI is a good choice because 
+    it is a modern framework that provides automatic data validation, documentation, 
+    and code generation, making it easy to build and maintain APIs.
+
+    The endpoints are designed to cover a range of use cases for getting and filtering trades. /trades 
+    returns all trades in the database, which is useful when the user wants to get a quick overview of all the trades. 
+    /trades/{id} returns a specific trade by its ID, which is useful when the user wants to get detailed information 
+    about a particular trade. /trades/search={query} is useful when the user wants to search for trades based on a specific keyword. 
+    /tradesfiltered returns trades based on various filters, such as asset class, trade date time range, trade price range, 
+    and trade type (buy or sell). /paginatedtrades returns trades in a paginated manner, 
+    which is useful when the user wants to view a subset of the trades.
+
+    The database used is MongoDB, a NoSQL document database that is scalable, flexible, and easy to use. MongoDB is a good choice 
+    because it is fast, can handle large amounts of data, and can scale horizontally.
+    
