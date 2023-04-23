@@ -2,7 +2,6 @@ from fastapi import APIRouter, HTTPException
 from datetime import datetime
 from models.trade import Trade
 from config.db import client
-from mongopush import putdata
 from schemas.trade import tradeEntity, tradesEntity
 from typing import List
 import math
