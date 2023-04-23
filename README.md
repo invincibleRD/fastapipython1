@@ -1,6 +1,6 @@
-# FastAPI Project
+# FastAPI Assignment
 
-This is a FastAPI project for managing trades.
+This is a FastAPI assignment by steeleye.
 
 ## Getting Started
 
