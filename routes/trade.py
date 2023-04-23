@@ -66,6 +66,20 @@ async def get_filtered_trades(assetClass: str = None, start: datetime = None, en
     print("filtered data ")
     return tradesEntity(con.find(filters))
 
+
+@trade.get("/pagination")
+async def get_paginated_trades(limit: int = 10, skip: int = 0):
+    # tradesEntity(con.find().skip(skip).limit(limit)) 
+    res=[]
+    for i in range(0,limit,skip):
+        res.append(tradesEntity(con.find().skip(i).limit(skip)))
+    print("pagination  applied")
+    return res
+    # return tradesEntity(con.find(filters))
+
+
+
+
 # @trade.get("/trades/search")
 # async def search_trades(query: str):
 #     query={
