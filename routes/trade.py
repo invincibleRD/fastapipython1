@@ -79,7 +79,7 @@ async def get_paginated_trades(page: int = 1, perPage: int = 5):
     res["pageNumber"] = page
     res["totalPages"] = math.ceil(trades.__len__()/perPage)
     res["totalTrades"] = trades.__len__()
-    data = con.find().skip((page-1)*page_size).limit(perPage)
+    data = con.find().skip((page-1)*perPage).limit(perPage)
     trades = [Trade(**trade) for trade in data]
     if (trades == {} or page > res["totalPages"]):
         res["trades"] = "Please provide correct page number"
