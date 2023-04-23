@@ -10,15 +10,15 @@ trade = APIRouter()
 con = client.TradingCompany.trades2
 
 
-@trade.get("/trades", response_model=List[Trade])
-async def get_trades() -> List[Trade]:
+@trade.get("/trades",)
+async def get_trades() :
     print("all")
     trades = con.find()
     return [Trade(**trade) for trade in trades]
 
 
-@trade.get('/trades/search={query}', response_model=List[Trade])
-async def search_trades(query: str) -> List[Trade]:
+@trade.get('/trades/search={query}')
+async def search_trades(query: str):
     query = {
         "$or": [
             {"counterparty": {"$regex": f".*{query}.*", "$options": "i"}},
@@ -32,8 +32,8 @@ async def search_trades(query: str) -> List[Trade]:
     return [Trade(**trade) for trade in trades]
 
 
-@trade.get("/trades/{id}", response_model=Trade)
-async def get_trade_by_id(id: str) -> Trade:
+@trade.get("/trades/{id}")
+async def get_trade_by_id(id: str):
     print("find by ID")
     trade = con.find_one({"tradeId": id})
     if trade is None:
@@ -42,7 +42,7 @@ async def get_trade_by_id(id: str) -> Trade:
     return Trade(**trade)
 
 
-@trade.get("/tradesfiltered", response_model=List[Trade])
+@trade.get("/tradesfiltered")
 async def get_filtered_trades(assetClass: str = None, start: datetime = None, end: datetime = None,
                               minPrice: float = None, maxPrice: float = None, tradeType: str = None,
                               ) -> List[Trade]:
@@ -72,19 +72,19 @@ async def get_filtered_trades(assetClass: str = None, start: datetime = None, en
 
 
 @trade.get("/paginatedtrades")
-async def get_paginated_trades(page: int = 1, page_size: int = 5) -> dict:
+async def get_paginated_trades(page: int = 1, page_size: int = 5):
     res = {}
     all_trades = con.find()
     trades = [Trade(**trade) for trade in all_trades]
     res["pageNumber"] = page
-    res["totalPages"]=math.ceil(trades.__len__()/page_size)
+    res["totalPages"] = math.ceil(trades.__len__()/page_size)
     res["totalTrades"] = trades.__len__()
-    data=con.find().skip((page-1)*page_size).limit(page_size)
-    trades=[Trade(**trade) for trade in data]
-    if(trades=={} or page>res["totalPages"]):
-        res["trades"]="Please provide correct page number"
+    data = con.find().skip((page-1)*page_size).limit(page_size)
+    trades = [Trade(**trade) for trade in data]
+    if (trades == {} or page > res["totalPages"]):
+        res["trades"] = "Please provide correct page number"
     else:
-        res["trades"]=trades
+        res["trades"] = trades
     return res
 
 
