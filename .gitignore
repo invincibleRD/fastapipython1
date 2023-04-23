@@ -1,3 +1,4 @@
 /.vscode
 /mongopush.py
 /venv
+.env
